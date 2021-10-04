@@ -3,7 +3,8 @@ import axios from "axios";
 import DayList from "./DayList";
 import Appointment from "./Appointment/index";
 import "components/Application.scss";
-import { getAppointmentsForDay } from "../helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "../helpers/selectors";
+
 
 // const appointments = [
 //   {
@@ -56,6 +57,7 @@ export default function Application(props) {
     day: "Monday",
     days: [],
     appointments: {},
+    interviewers: {}
   });
   const setDay = day => setState({ ...state, day });
   //const setDays = d => setState(prev => ({ ...prev, days: d }));  
@@ -66,20 +68,34 @@ export default function Application(props) {
       axios.get('/api/appointments'),
       axios.get('/api/interviewers'),
     ]).then (all=>{
-      setState(prev=>({...prev, days: all[0].data, appointments: all[1].data}));
+      console.log(all);
+      setState(prev=>({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}));
     })
   }, []);
 
   const objToPassToGetAppointmFunct = {//object to pass to function
     days: state.days,
-    appointments: state.appointments
+    appointments: state.appointments,
+    interviewers: state.interviewers
   };
 
   const dailyAppointments = getAppointmentsForDay(objToPassToGetAppointmFunct, state.day);
+  const dailyInterviewers = getInterviewersForDay(objToPassToGetAppointmFunct, state.day)
+  console.log('DDDDDDDDD', dailyInterviewers);
 
-  const arr = dailyAppointments.map((appointment) => (
-    <Appointment key={appointment.id} {...appointment} />
-  ));
+  const arr = dailyAppointments.map((appointment) => {
+    const interview = getInterview(objToPassToGetAppointmFunct, appointment.interview);
+    return (
+      <Appointment
+        key={appointment.id}
+        id={appointment.id}
+        time={appointment.time}
+        interview={interview}
+        func={dailyInterviewers}
+      />
+    );
+  });
+
 
   return (
     <main className="layout">
