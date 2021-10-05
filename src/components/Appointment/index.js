@@ -59,7 +59,7 @@ export default function Appointment(props) {
       {mode=== EDIT && <Form 
         name={props.interview.student} 
         interviewer={props.interview.interviewer.id}
-        interviewers={props.func}
+        interviewers={props.interviewers}
         onCancel={()=> transition(SHOW)} onSave= {save}
         />}
       {mode === SHOW && (
@@ -71,7 +71,7 @@ export default function Appointment(props) {
           onEdit={()=> transition(EDIT)}
         />
       )}
-      {mode===CREATE && <Form interviewers={props.func} onCancel={back} onSave={save}/>}
+      {mode===CREATE && <Form interviewers={props.interviewers} onCancel={back} onSave={save}/>}
     </article>
   );
 }
