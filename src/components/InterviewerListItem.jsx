@@ -2,12 +2,10 @@ import React from 'react';
 import classNames from 'classnames';
 import 'components/InterviewerListItem.scss';
 
-export default function InterviewerListItem(props) {
-  console.log("PROPS InterviewerListItem",props); 
+export default function InterviewerListItem(props) { 
   let interviewerClass = classNames('interviewers__item', {
     "interviewers__item--selected": props.selected
   });
-
   
   return (
     <li className={interviewerClass} onClick={

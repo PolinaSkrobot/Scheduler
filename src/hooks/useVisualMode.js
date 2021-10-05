@@ -5,7 +5,6 @@ export default function useVisualMode(initial) {
 
   function transition(mode, replace) {
     if (replace) {
-      console.log("HHH", history);
       setHistory((prev) => {
         const newHistory = [...prev];
         newHistory[newHistory.length - 1] = mode;

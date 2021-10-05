@@ -54,7 +54,6 @@ export function getInterview(state, interview) {
   const newObj = {};
   if (interview!==null) {
     const id_ = interview.interviewer;
-    console.log(id_);
     newObj.student = interview.student;
     newObj.interviewer = state.interviewers[id_];
     return newObj;
