@@ -80,8 +80,43 @@ export default function Application(props) {
   };
 
   const dailyAppointments = getAppointmentsForDay(objToPassToGetAppointmFunct, state.day);
-  const dailyInterviewers = getInterviewersForDay(objToPassToGetAppointmFunct, state.day)
-  console.log('DDDDDDDDD', dailyInterviewers);
+  const dailyInterviewers = getInterviewersForDay(objToPassToGetAppointmFunct, state.day);
+
+  function bookInterview(id, interview) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    return axios.put(`/api/appointments/${id}`, {   
+      interview
+    })
+      .then(()=> setState({
+        ...state,
+        appointments
+      }));
+  }
+
+  function cancelInterview(id, interview_) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview_ }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };  
+    return axios.delete(`/api/appointments/${id}`, {   
+      interview_
+    })
+      .then(res=> setState({
+        ...state,
+        appointments
+      }));
+  }
 
   const arr = dailyAppointments.map((appointment) => {
     const interview = getInterview(objToPassToGetAppointmFunct, appointment.interview);
@@ -92,9 +127,12 @@ export default function Application(props) {
         time={appointment.time}
         interview={interview}
         func={dailyInterviewers}
+        bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
       />
     );
   });
+
 
 
   return (
