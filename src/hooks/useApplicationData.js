@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { getAppointmentsForDay } from "helpers/selectors";
+require("dotenv").config();
 
 export default function useApplicationData() {
   const [state, setState] = useState({
@@ -25,6 +26,40 @@ export default function useApplicationData() {
       }));
     });
   }, []);
+
+  useEffect(()=> {
+    const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+        ws.addEventListener("open", ()=>{
+          console.log("Connected!!!");
+        });
+        ws.onopen = function (event) {
+          ws.send("ping");
+        };
+        ws.onmessage = function(event) {
+          // var text = "";
+          var msg = JSON.parse(event.data);
+          console.log("MESS",msg);
+
+          if (msg.type === "SET_INTERVIEW") {
+            console.log("I", msg.interview);
+            const newApp={...state.appointments[msg.id], interview: msg.interview };
+            console.log("newApp", newApp);
+            console.log("AppBefore", {...state.appointments});
+            const newApps={...state.appointments, [msg.id]: newApp};
+            console.log("newApps", newApps);
+            updateSpots(newApps);
+            //setState({...state, appointments: newApps})
+            
+          }
+     
+          // if (text.length) {
+          //   f.write(text);
+          //   document.getElementById("chatbox").contentWindow.scrollByPages(1);
+          // }
+
+        };
+        return () => ws.close();
+  })
 
   function updateSpots(appointments_) {
     const objToPassToGetAppointmFunct = {
