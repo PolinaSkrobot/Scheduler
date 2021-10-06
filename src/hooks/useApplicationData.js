@@ -12,7 +12,7 @@ export default function useApplicationData() {
   });
   const setDay = (day) => setState({ ...state, day });
 
-  useEffect(() => {
+  useEffect(() => {//api calls and setting new state with json data
     Promise.all([
       axios.get("/api/days"),
       axios.get("/api/appointments"),
@@ -27,62 +27,49 @@ export default function useApplicationData() {
     });
   }, []);
 
-  useEffect(()=> {
+  useEffect(()=> {//connection to the websocket server
     const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
         ws.addEventListener("open", ()=>{
           console.log("Connected!!!");
         });
         ws.onopen = function (event) {
-          ws.send("ping");
+          // ws.send("ping");
         };
         ws.onmessage = function(event) {
-          // var text = "";
-          var msg = JSON.parse(event.data);
+          const msg = JSON.parse(event.data);
           console.log("MESS",msg);
 
           if (msg.type === "SET_INTERVIEW") {
-            console.log("I", msg.interview);
             const newApp={...state.appointments[msg.id], interview: msg.interview };
-            console.log("newApp", newApp);
-            console.log("AppBefore", {...state.appointments});
             const newApps={...state.appointments, [msg.id]: newApp};
-            console.log("newApps", newApps);
-            updateSpots(newApps);
-            //setState({...state, appointments: newApps})
-            
+            updateSpots(newApps);            
           }
-     
-          // if (text.length) {
-          //   f.write(text);
-          //   document.getElementById("chatbox").contentWindow.scrollByPages(1);
-          // }
 
         };
         return () => ws.close();
   })
 
   function updateSpots(appointments_) {
-    const objToPassToGetAppointmFunct = {
-      //object to pass to function
+    const objToPassToFunct = {//object to pass to function      
       ...state,
       appointments: appointments_,
     };
-    const dailyAppointments = getAppointmentsForDay(
-      objToPassToGetAppointmFunct,
+    const dailyAppointments = getAppointmentsForDay(//call hepler function to get app-s for the day
+      objToPassToFunct,
       state.day
     );
-    const filteredSpots = dailyAppointments.filter(
+    const filteredSpots = dailyAppointments.filter(//looking for nulls
       (elem) => elem.interview === null
     );
-    const newDays = [...state.days];
+    const newDays = [...state.days];//copy content of state.day
 
-    for (let i = 0; i < newDays.length; i++) {
+    for (let i = 0; i < newDays.length; i++) {//looking for the day to change the num of available spots
       if (newDays[i].name === state.day) {
         newDays[i].spots = filteredSpots.length;
       }
     }
 
-    setState((prev) => ({
+    setState((prev) => ({//setter to render the page
       ...prev,
       appointments: appointments_,
       days: newDays
@@ -94,12 +81,12 @@ export default function useApplicationData() {
       ...state.appointments[id],
       interview: { ...interview },
     };
-    const appointments_ = {
+    const appointments_ = {//new appointments obj with passed interview data
       ...state.appointments,
       [id]: appointment,
     };
 
-    return axios
+    return axios//request to the server
       .put(`/api/appointments/${id}`, {
         interview,
       })
