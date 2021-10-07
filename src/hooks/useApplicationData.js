@@ -30,7 +30,7 @@ export default function useApplicationData() {
   useEffect(()=> {//connection to the websocket server
     const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
         ws.addEventListener("open", ()=>{
-          console.log("Connected!!!");
+         // console.log("Connected!!!");
         });
         ws.onopen = function (event) {
           // ws.send("ping");
