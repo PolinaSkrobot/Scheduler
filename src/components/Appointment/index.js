@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import "components/Appointment/styles.scss";
 import Header from "./Header";
 import Show from "./Show";
@@ -10,6 +10,7 @@ import Error from "./Error";
 import useVisualMode from "hooks/useVisualMode";
 
 export default function Appointment(props) {
+  //modes
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE";
@@ -19,35 +20,34 @@ export default function Appointment(props) {
   const EDIT = "EDIT";
   const ERROR_SAVE = "ERROR_SAVE";
   const ERROR_CANCEl = "ERROR_CANCEL";
+
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
-  useEffect(() => {
+  useEffect(() => {//for the websocket
     if (props.interview && mode === EMPTY) {
-     transition(SHOW);
+      transition(SHOW);
     }
     if (props.interview === null && mode === SHOW) {
-     transition(EMPTY);
+      transition(EMPTY);
     }
-   }, [props.interview, transition, mode]);
+  }, [props.interview, transition, mode]);
 
-  function save(name, interviewer) {
-  
-      const interview = {
-        student: name,
-        interviewer,
-      };
-      transition(SAVING);
-      props
-        .bookInterview(props.id, interview)
-        .then(() => {
-          transition(SHOW);
-        })
-        .catch((error) => transition(ERROR_SAVE, true));
-    
+  function save(name, interviewer) {//for the save button
+    const interview = {
+      student: name,
+      interviewer,
+    };
+    transition(SAVING);
+    props
+      .bookInterview(props.id, interview)
+      .then(() => {
+        transition(SHOW);
+      })
+      .catch((error) => transition(ERROR_SAVE, true));
   }
 
-  function cancel(id) {
+  function cancel(id) {//for the delete button
     const interview = null;
     transition(DELETING, true);
     props

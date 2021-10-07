@@ -1,5 +1,4 @@
 import React from "react";
-//import axios from "axios";
 import DayList from "./DayList";
 import Appointment from "./Appointment/index";
 import "components/Application.scss";
@@ -14,8 +13,8 @@ export default function Application(props) {
   const { state, setDay, bookInterview, cancelInterview } =
     useApplicationData();
 
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
-  const dailyInterviewers = getInterviewersForDay(state, state.day);
+  const dailyAppointments = getAppointmentsForDay(state, state.day);//call helper
+  const dailyInterviewers = getInterviewersForDay(state, state.day);//call helper
 
   const arr = dailyAppointments.map((appointment) => {
     const interview = getInterview(state, appointment.interview);
