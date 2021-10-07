@@ -59,7 +59,7 @@ export default function useApplicationData() {
   });
 
   function updateSpots(id, appointments_) {
-    return state.days.map((day) => {
+    const newDays = [...state.days].map((day) => {
       let vacSpots = 0;
       if (day.appointments.includes(id)) {
         for (const app_id of day.appointments) {
@@ -70,7 +70,8 @@ export default function useApplicationData() {
         day.spots = vacSpots;
       }
       return day;
-    });   
+    }); 
+    return newDays;  
   }
 
   function bookInterview(id, interview) {
