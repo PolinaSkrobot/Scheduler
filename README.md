@@ -5,19 +5,19 @@ React based SPA with API calls, persistent data (PostgreSQL) and dynamical page 
 
 Add a new interview by clicking the "+" button. Type the student name and select an interviewer. Save interview by clicking "Save" button.
 
-!["Video of functionality"]()
+!["Video of functionality"](https://github.com/PolinaSkrobot/Scheduler/blob/master/public/images/Add.gif)
 
 Edit it if you wish.
 
-!["Video of functionality"]()
+!["Video of functionality"](https://github.com/PolinaSkrobot/Scheduler/blob/master/public/images/Edit.gif)
 
 Delete an existing interview. Update the number of available interview spots for the day dynamically.
 
-!["Video of functionality"]()
+!["Video of functionality"](https://github.com/PolinaSkrobot/Scheduler/blob/master/public/images/Delete.gif)
 
 Websocket allows to make/see changes in real-time on more than one page.
 
-!["Video of functionality"]()
+!["Video of functionality"](https://github.com/PolinaSkrobot/Scheduler/blob/master/public/images/Web.gif)
 ## Setup
 
 Install dependencies with `npm install`. For this project cypress was installed globally.
