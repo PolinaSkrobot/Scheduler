@@ -37,7 +37,6 @@ export default function useApplicationData() {
         };
         ws.onmessage = function(event) {
           const msg = JSON.parse(event.data);
-          console.log("MESS",msg);
 
           if (msg.type === "SET_INTERVIEW") {
             const newApp={...state.appointments[msg.id], interview: msg.interview };
